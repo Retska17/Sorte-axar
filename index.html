@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorteaxar - Sorteos Inteligentes</title>
+    <style>
+        :root {
+            --sky-gradient-start: #E3F2FD;
+            --sky-gradient-mid: #BBDEFB;
+            --sky-gradient-end: #90CAF9;
+            --cloud-white: #FFFFFF;
+            --soft-blue: #64B5F6;
+            --deep-blue: #42A5F5;
+            --accent-orange: #FFB74D;
+            --accent-pink: #F48FB1;
+            --light-green: #65B32E;
+            --mint-green: #8FBC8F;
+            --text-dark: #1565C0;
+            --text-light: #0D47A1;
+            --success: #66BB6A;
+            --shadow-soft: rgba(33, 150, 243, 0.15);
+            --shadow-medium: rgba(33, 150, 243, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #FFF8F0 0%, #F5E6D3 40%, #EAD8C0 70%, #DFC9AD 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #5D4E37;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .logo-cube {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #4ECDC4, #44A08D);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 8px 20px rgba(68, 160, 141, 0.4);
+            transform: rotate(5deg);
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #8B6F47;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fadeIn 1s ease;
+        }
+
+        .tab {
+            background: var(--cloud-white);
+            border: none;
+            padding: 14px 28px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #5D4E37;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(139, 111, 71, 0.15);
+        }
+
+        .tab:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(139, 111, 71, 0.25);
+            background: #FFF8F0;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #4ECDC4, #44A08D);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--cloud-white);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 8px 32px var(--shadow-medium);
+            margin-bottom: 24px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px var(--shadow-medium);
+        }
+
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #5D4E37;
+            font-size: 1rem;
+        }
+
+        textarea, input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #DFC9AD;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: #FFFCF7;
+        }
+
+        textarea:focus, input:focus, select:focus {
+            outline: none;
+            border-color: #4ECDC4;
+            box-shadow: 0 0 0 4px rgba(78, 205, 196, 0.15);
+            transform: scale(1.01);
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4ECDC4, #44A08D);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 6px 20px rgba(68, 160, 141, 0.3);
+            margin: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(68, 160, 141, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #FFA07A, #FF8C69);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #FF6B6B, #EE5A6F);
+        }
+
+        .results {
+            margin-top: 30px;
+            padding: 24px;
+            background: linear-gradient(135deg, rgba(255, 248, 240, 0.8), rgba(245, 230, 211, 0.8));
+            border-radius: 20px;
+            border: 2px solid #C4A57B;
+        }
+
+        .result-item {
+            background: var(--cloud-white);
+            padding: 16px;
+            margin: 12px 0;
+            border-radius: 16px;
+            border-left: 4px solid #4ECDC4;
+            box-shadow: 0 4px 12px rgba(78, 205, 196, 0.15);
+            animation: slideIn 0.4s ease;
+        }
+
+        .result-item h3 {
+            color: #5D4E37;
+            margin-bottom: 8px;
+        }
+
+        .result-item ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .result-item li {
+            padding: 6px 0;
+            color: #5D4E37;
+        }
+
+        .rules-container {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+
+        .rule-item {
+            background: white;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px var(--shadow-soft);
+        }
+
+        .rule-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin: 4px;
+        }
+
+        .rule-tag.incompatible {
+            background: #FFCDD2;
+            color: #C62828;
+        }
+
+        .rule-tag.synergy {
+            background: #C8E6C9;
+            color: #2E7D32;
+        }
+
+        .dice-container, .coin-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+            perspective: 1000px;
+        }
+
+        .dice, .coin {
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 4rem;
+            box-shadow: 0 10px 40px var(--shadow-medium);
+            transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .dice.rolling, .coin.flipping {
+            animation: roll 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .coin.flipping {
+            animation: flip 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes roll {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(180deg) scale(1.2); }
+            50% { transform: rotate(360deg) scale(0.8); }
+            75% { transform: rotate(540deg) scale(1.2); }
+        }
+
+        @keyframes flip {
+            0%, 100% { transform: rotateY(0deg); }
+            50% { transform: rotateY(1800deg) scale(1.3); }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .history-panel {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 16px;
+            margin-top: 20px;
+        }
+
+        .history-item {
+            background: white;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px var(--shadow-soft);
+            font-size: 0.9rem;
+        }
+
+        .counter {
+            display: inline-block;
+            background: #4ECDC4;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+            .card {
+                padding: 20px;
+            }
+            .btn {
+                width: 100%;\n                margin: 8px 0;\n            }\n        }\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <div class=\"header\">\n            <h1 class=\"logo\">\n                <div class=\"logo-cube\">S</div> Sorteaxar\n            </h1>\n            <p class=\"subtitle\">Sorteos Inteligentes con Reglas Avanzadas</p>\n        </div>\n\n        <div class=\"tabs\">\n            <button class=\"tab active\" onclick=\"switchTab('simple')\">Sorteo Simple</button>\n            <button class=\"tab\" onclick=\"switchTab('groups')\">Sorteo de Grupos</button>\n            <button class=\"tab\" onclick=\"switchTab('rules')\">Reglas Avanzadas</button>\n            <button class=\"tab\" onclick=\"switchTab('dice')\">Dados</button>\n            <button class=\"tab\" onclick=\"switchTab('coin')\">Moneda</button>\n            <button class=\"tab\" onclick=\"switchTab('random')\">Número Aleatorio</button>\n            <button class=\"tab\" onclick=\"switchTab('roulette')\">Ruleta</button>\n            <button class=\"tab\" onclick=\"switchTab('crosses')\">Cruces</button>\n            <button class=\"tab\" onclick=\"switchTab('pots')\">Grupos con Bombos</button>\n            <button class=\"tab\" onclick=\"switchTab('tournament')\">Torneo</button>\n        </div>\n\n        <!-- Sorteo Simple -->\n        <div id=\"simple\" class=\"tab-content active\">\n            <div class=\"card\">\n                <h2>Sorteo Simple de Lista</h2>\n                <div class=\"input-group\">\n                    <label>Lista de elementos (uno por línea)</label>\n                    <textarea id=\"simpleList\" placeholder=\"Juan\nMaría\nPedro\nAna\nCarlos\"></textarea>\n                    <span class=\"counter\" id=\"simpleCounter\">0 elementos</span>\n                </div>\n                <div class=\"input-group\">\n                    <label>¿Cuántos ganadores?</label>\n                    <input type=\"number\" id=\"simpleWinners\" value=\"1\" min=\"1\">\n                </div>\n                <button class=\"btn\" onclick=\"simpleRaffle()\">Sortear</button>\n                <button class=\"btn btn-secondary\" onclick=\"clearSimple()\">Limpiar</button>\n                <div id=\"simpleResults\"></div>\n            </div>\n        </div>\n\n        <!-- Sorteo de Grupos -->\n        <div id=\"groups\" class=\"tab-content\">\n            <div class=\"card\">\n                <h2>Sorteo de Grupos</h2>\n                <div class=\"input-group\">\n                    <label>Lista de participantes (uno por línea)</label>\n                    <textarea id=\"groupList\" placeholder=\"Equipo 1\nEquipo 2\nEquipo 3\n...\"></textarea>\n                    <span class=\"counter\" id=\"groupCounter\">0 equipos</span>\n                </div>\n                <div class=\"input-group\">\n                    <label>Número de grupos</label>\n                    <input type=\"number\" id=\"numGroups\" value=\"4\" min=\"2\">\n                </div>\n                <button class=\"btn\" onclick=\"groupRaffle()\">Crear Grupos</button>\n                <button class=\"btn btn-secondary\" onclick=\"clearGroups()\">Limpiar</button>\n                <div id=\"groupResults\"></div>\n            </div>\n        </div>\n\n        <!-- Reglas Avanzadas -->\n        <div id=\"rules\" class=\"tab-content\">\n            <div class=\"card\">\n                <h2>Sorteo con Reglas Avanzadas</h2>\n                <div class=\"input-group\">\n                    <label>Lista de participantes (uno por línea)</label>\n                    <textarea id=\"rulesList\" placeholder=\"Juan\nMaría\nPedro\nAna\nCarlos\"></textarea>\n                    <span class=\"counter\" id=\"rulesCounter\">0 participantes</span>\n                </div>\n                <div class=\"input-group\">\n                    <label>Número de equipos</label>\n                    <input type=\"number\" id=\"numTeams\" value=\"2\" min=\"2\">\n                </div>\n\n                <div class=\"rules-container\">\n                    <h3>❌ Reglas de Incompatibilidad (No pueden estar juntos)</h3>\n                    <div class=\"input-group\">\n                        <label>Persona 1</label>\n                        <input type=\"text\" id=\"incomp1\" placeholder=\"Nombre\">\n                    </div>\n                    <div class=\"input-group\">\n                        <label>Persona 2</label>\n                        <input type=\"text\" id=\"incomp2\" placeholder=\"Nombre\">\n                    </div>\n                    <button class=\"btn btn-danger\" onclick=\"addIncompatibility()\">Agregar Regla</button>\n                    <div id=\"incompatibilityList\"></div>\n                </div>\n\n                <div class=\"rules-container\">\n                    <h3>🤝 Reglas de Sinergia (Deben estar juntos)</h3>\n                    <div class=\"input-group\">\n                        <label>Persona 1</label>\n                        <input type=\"text\" id=\"syn1\" placeholder=\"Nombre\">\n                    </div>\n                    <div class=\"input-group\">\n                        <label>Persona 2</label>\n                        <input type=\"text\" id=\"syn2\" placeholder=\"Nombre\">\n                    </div>\n                    <button class=\"btn\" onclick=\"addSynergy()\">Agregar Regla</button>\n                    <div id=\"synergyList\"></div>\n                </div>\n\n                <button class=\"btn\" onclick=\"rulesRaffle()\">Sortear con Reglas</button>\n                <button class=\"btn btn-secondary\" onclick=\"clearRules()\">Limpiar Todo</button>\n                <div id=\"rulesResults\"></div>\n            </div>\n        </div>\n\n        <!-- Dados -->\n        <div id=\"dice\" class=\"tab-content\">\n            <div class=\"card\">\n                <h2>Lanzar Dados</h2>\n                <div class=\"input-group\">\n                    <label>Número de dados</label>\n                    <select id=\"numDice\">\n                        <option value=\"1\">1 dado</option>\n                        <option value=\"2\">2 dados</option>\n                        <option value=\"3\">3 dados</option>\n                    </select>\n                </div>\n                <div class=\"dice-container\" id=\"diceContainer\"></div>\n                <button class=\"btn\" onclick=\"rollDice()\">Lanzar Dados</button>\n                <div id=\"diceResult\"></div>\n            </div>\n        </div>\n\n        <!-- Moneda -->\n        <div id=\"coin\" class=\"tab-content\">\n            <div class=\"card\">\n                <h2>Lanzar Moneda</h2>\n                <div class=\"coin-container\">\n                    <div class=\"coin\" id=\"coinDisplay\">?</div>\n                </div>\n                <button class=\"btn\" onclick=\"flipCoin()\">Lanzar Moneda</button>\n                <div id=\"coinResult\"></div>\n            </div>\n        </div>\n\n        <!-- Número Aleatorio -->\n        <div id=\"random\" class=\"tab-content\">\n            <div class=\"card\">\n                <h2>🔢 Generador de Número Aleatorio</h2>\n                <div style=\"display: grid; grid-template-columns: 1fr 1fr; gap: 20px;\">\n                    <div class=\"input-group\">\n                        <label>Número Mínimo</label>\n                        <input type=\"number\" id=\"minNumber\" value=\"1\">\n                    </div>\n                    <div class=\"input-group\">\n                        <label>Número Máximo</label>\n                        <input type=\"number\" id=\"maxNumber\" value=\"100\">\n                    </div>\n                </div>\n                <div style=\"text-align: center; margin: 30px 0;\">\n                    <div id=\"randomNumberDisplay\" style=\"font-size: 5rem; font-weight: 700; color: #4ECDC4; min-height: 100px; display: flex; align-items: center; justify-content: center;\">?</div>\n                </div>\n                <button class=\"btn\" onclick=\"generateRandomNumber()\">Generar Número</button>\n                <button class=\"btn btn-secondary\" onclick=\"clearRandomNumber()\">Limpiar</button>\n                <div id=\"randomNumberResult\"></div>\n            </div>\n        </div>\n\n        <!-- Ruleta -->\n        <div id=\"roulette\" class=\"tab-content\">\n            <div class=\"card\">\n                <h2>🎡 Ruleta de Opciones</h2>\n                <div class=\"input-group\">\n                    <label>Opciones (una por línea)</label>\n                    <textarea id=\"rouletteList\" placeholder=\"Opción 1\nOpción 2\nOpción 3\nOpción 4\"></textarea>\n                    <span class=\"counter\" id=\"rouletteCounter\">0 opciones</span>\n                </div>\n                <div style=\"text-align: center; margin: 30px 0;\">\n                    <canvas id=\"rouletteCanvas\" width=\"400\" height=\"400\" style=\"max-width: 100%; border-radius: 50%; box-shadow: 0 10px 40px var(--shadow-medium);\"></canvas>\n                </div>\n                <button class=\"btn\" onclick=\"spinRoulette()\">Girar Ruleta</button>\n                <button class=\"btn btn-secondary\" onclick=\"clearRoulette()\">Limpiar</button>\n                <div id=\"rouletteResult\"></div>\n            </div>\n        </div>\n\n        <!-- Cruces -->\n        <div id=\"crosses\" class=\"tab-content\">\n            <div class=\"card\">\n                <h2>⚔️ Sorteo de Cruces</h2>\n                <div class=\"input-group\">\n                    <label>Formato del partido</label>\n                    <select id=\"crossesFormat\">\n                        <option value=\"roundtrip\">Ida y Vuelta</option>\n                        <option value=\"single\">Partido Único</option>\n                    </select>\n                </div>\n                <div style=\"display: grid; grid-template-columns: 1fr 1fr; gap: 20px;\">\n                    <div class=\"input-group\">\n                        <label>Bombo 1 (uno por línea)</label>\n                        <textarea id=\"pot1List\" placeholder=\"Equipo A1\nEquipo A2\nEquipo A3\"></textarea>\n                        <span class=\"counter\" id=\"pot1Counter\">0 equipos</span>\n                    </div>\n                    <div class=\"input-group\">\n                        <label>Bombo 2 (uno por línea)</label>\n                        <textarea id=\"pot2List\" placeholder=\"Equipo B1\nEquipo B2\nEquipo B3\"></textarea>\n                        <span class=\"counter\" id=\"pot2Counter\">0 equipos</span>\n                    </div>\n                </div>\n                <button class=\"btn\" onclick=\"drawCrosses()\">Sortear Cruces</button>\n                <button class=\"btn btn-secondary\" onclick=\"clearCrosses()\">Limpiar</button>\n                <div id=\"crossesResults\"></div>\n                <div id=\"crossesFixture\"></div>\n            </div>\n        </div>\n\n        <!-- Grupos con Bombos -->\n        <div id=\"pots\" class=\"tab-content\">\n            <div class=\"card\">\n                <h2>🏆 Sorteo de Grupos con Bombos</h2>\n                <div class=\"input-group\">\n                    <label>Formato del partido</label>\n                    <select id=\"potsFormat\">\n                        <option value=\"roundrobin\">Todos contra Todos</option>\n                        <option value=\"single\">Partido Único</option>\n                    </select>\n                </div>\n                <div class=\"input-group\">\n                    <label>Número de bombos</label>\n                    <select id=\"numPots\" onchange=\"updatePotsInputs()\">\n                        <option value=\"2\">2 bombos</option>\n                        <option value=\"3\">3 bombos</option>\n                        <option value=\"4\">4 bombos</option>\n                        <option value=\"5\">5 bombos</option>\n                        <option value=\"6\">6 bombos</option>\n                    </select>\n                </div>\n                <div id=\"potsInputsContainer\"></div>\n                <div class=\"input-group\">\n                    <label>Número de grupos</label>\n                    <input type=\"number\" id=\"numGroupsPots\" value=\"4\" min=\"2\">\n                </div>\n                <button class=\"btn\" onclick=\"drawGroupsWithPots()\">Sortear Grupos</button>\n                <button class=\"btn btn-secondary\" onclick=\"clearPots()\">Limpiar</button>\n                <div id=\"potsResults\"></div>\n                <div id=\"potsFixture\"></div>\n            </div>\n        </div>\n\n        <!-- Torneo -->\n        <div id=\"tournament\" class=\"tab-content\">\n            <div class=\"card\">\n                <h2>🎖️ Generador de Torneo</h2>\n                <div class=\"input-group\">\n                    <label>Formato de fase de grupos</label>\n                    <select id=\"tournamentFormat\">\n                        <option value=\"roundrobin\">Todos contra Todos</option>\n                        <option value=\"single\">Partido Único</option>\n                    </select>\n                </div>\n                <div class=\"input-group\">\n                    <label>Lista de equipos (uno por línea)</label>\n                    <textarea id=\"tournamentList\" placeholder=\"Equipo 1\nEquipo 2\nEquipo 3\n...\"></textarea>\n                    <span class=\"counter\" id=\"tournamentCounter\">0 equipos</span>\n                </div>\n                <div class=\"input-group\">\n                    <label>Equipos por grupo</label>\n                    <input type=\"number\" id=\"teamsPerGroup\" value=\"4\" min=\"3\" max=\"6\">\n                </div>\n                <div class=\"input-group\">\n                    <label>Clasifican por grupo</label>\n                    <input type=\"number\" id=\"teamsAdvance\" value=\"2\" min=\"1\" max=\"4\">\n                </div>\n                <button class=\"btn\" onclick=\"generateTournament()\">Generar Torneo</button>\n                <button class=\"btn btn-secondary\" onclick=\"clearTournament()\">Limpiar</button>\n                <div id=\"tournamentResults\"></div>\n                <div id=\"tournamentFixture\"></div>\n            </div>\n        </div>\n\n        <!-- Historial -->\n        <div class=\"history-panel\">\n            <h3>🕒 Historial de Sorteos</h3>\n            <div id=\"history\"></div>\n        </div>\n    </div>\n\n    <script>\n        let incompatibilityRules = [];\n        let synergyRules = [];\n        let history = [];\n\n        // Cambiar pestañas\n        function switchTab(tabName) {\n            document.querySelectorAll('.tab-content').forEach(content => {\n                content.classList.remove('active');\n            });\n            document.querySelectorAll('.tab').forEach(tab => {\n                tab.classList.remove('active');\n            });\n            document.getElementById(tabName).classList.add('active');\n            event.target.classList.add('active');\n        }\n\n        // Contadores en tiempo real\n        document.getElementById('simpleList').addEventListener('input', function() {\n            const count = this.value.trim().split('\\n').filter(x => x.trim().length > 0).length;\n            document.getElementById('simpleCounter').textContent = `${count} elementos`;\n        });\n\n        document.getElementById('groupList').addEventListener('input', function() {\n            const count = this.value.trim().split('\\n').filter(x => x.trim().length > 0).length;\n            document.getElementById('groupCounter').textContent = `${count} equipos`;\n        });\n\n        document.getElementById('rulesList').addEventListener('input', function() {\n            const count = this.value.trim().split('\\n').filter(x => x.trim().length > 0).length;\n            document.getElementById('rulesCounter').textContent = `${count} participantes`;\n        });\n\n        document.getElementById('rouletteList').addEventListener('input', function() {\n            const count = this.value.trim().split('\\n').filter(x => x.trim().length > 0).length;\n            document.getElementById('rouletteCounter').textContent = `${count} opciones`;\n        });\n\n        document.getElementById('pot1List').addEventListener('input', function() {\n            const count = this.value.trim().split('\\n').filter(x => x.trim().length > 0).length;\n            document.getElementById('pot1Counter').textContent = `${count} equipos`;\n        });\n\n        document.getElementById('pot2List').addEventListener('input', function() {\n            const count = this.value.trim().split('\\n').filter(x => x.trim().length > 0).length;\n            document.getElementById('pot2Counter').textContent = `${count} equipos`;\n        });\n\n        document.getElementById('tournamentList').addEventListener('input', function() {\n            const count = this.value.trim().split('\\n').filter(x => x.trim().length > 0).length;\n            document.getElementById('tournamentCounter').textContent = `${count} equipos`;\n        });\n\n        // Sorteo Simple\n        function simpleRaffle() {\n            const list = document.getElementById('simpleList').value.trim().split('\\n').filter(x => x.trim().length > 0);\n            const winners = parseInt(document.getElementById('simpleWinners').value);\n\n            if (list.length === 0) {\n                alert(\"Por favor ingresa una lista de elementos\");\n                return;\n            }\n            if (winners > list.length) {\n                alert(\"No puedes tener más ganadores que elementos en la lista\");\n                return;\n            }\n\n            const shuffled = [...list].sort(() => Math.random() - 0.5);\n            const selected = shuffled.slice(0, winners);\n\n            let html = '<div class=\"results\"><h3>🏆 Ganadores</h3>';\n            selected.forEach((winner, i) => {\n                html += `<div class=\"result-item\"><strong>${i + 1}.</strong> ${winner}</div>`;\n            });\n            html += '</div>';\n\n            document.getElementById('simpleResults').innerHTML = html;\n            addToHistory(`Sorteo Simple: ${winners} ganadores de ${list.length} elementos`);\n        }\n\n        function clearSimple() {\n            document.getElementById('simpleList').value = '';\n            document.getElementById('simpleResults').innerHTML = '';\n            document.getElementById('simpleCounter').textContent = '0 elementos';\n        }\n\n        // Sorteo de Grupos\n        function groupRaffle() {\n            const list = document.getElementById('groupList').value.trim().split('\\n').filter(x => x.trim().length > 0);\n            const numGroups = parseInt(document.getElementById('numGroups').value);\n\n            if (list.length === 0) {\n                alert(\"Por favor ingresa una lista de equipos\");\n                return;\n            }\n            if (numGroups > list.length) {\n                alert(\"No puedes tener más grupos que equipos\");\n                return;\n            }\n\n            const shuffled = [...list].sort(() => Math.random() - 0.5);\n            const groups = Array.from({ length: numGroups }, () => []);\n\n            shuffled.forEach((team, i) => {\n                groups[i % numGroups].push(team);\n            });\n\n            let html = '<div class=\"results\"><h3>📋 Grupos Formados</h3>';\n            groups.forEach((group, i) => {\n                html += `<div class=\"result-item\"><h3>Grupo ${String.fromCharCode(65 + i)}</h3><ul>`;\n                group.forEach(team => {\n                    html += `<li>${team}</li>`;\n                });\n                html += '</ul></div>';\n            });\n            html += '</div>';\n\n            document.getElementById('groupResults').innerHTML = html;\n            addToHistory(`Sorteo de Grupos: ${list.length} equipos en ${numGroups} grupos`);\n        }\n\n        function clearGroups() {\n            document.getElementById('groupList').value = '';\n            document.getElementById('groupResults').innerHTML = '';\n            document.getElementById('groupCounter').textContent = '0 equipos';\n        }\n\n        // Reglas de Incompatibilidad\n        function addIncompatibility() {\n            const p1 = document.getElementById('incomp1').value.trim();\n            const p2 = document.getElementById('incomp2').value.trim();\n\n            if (!p1 || !p2) {\n                alert(\"Por favor completa ambos nombres\");\n                return;\n            }\n\n            incompatibilityRules.push([p1, p2]);\n            updateIncompatibilityList();\n            document.getElementById('incomp1').value = '';\n            document.getElementById('incomp2').value = '';\n        }\n\n        function updateIncompatibilityList() {\n            let html = '';\n            incompatibilityRules.forEach((rule, i) => {\n                html += `<div class=\"rule-item\">\n                    <span><span class=\"rule-tag incompatible\">${rule[0]}</span> ↔ <span class=\"rule-tag incompatible\">${rule[1]}</span></span>\n                    <button class=\"btn btn-danger\" style=\"padding: 8px 16px; font-size: 0.9rem;\" onclick=\"removeIncompatibility(${i})\">Eliminar</button>\n                </div>`;\n            });\n            document.getElementById('incompatibilityList').innerHTML = html;\n        }\n\n        function removeIncompatibility(index) {\n            incompatibilityRules.splice(index, 1);\n            updateIncompatibilityList();\n        }\n\n        // Reglas de Sinergia\n        function addSynergy() {\n            const p1 = document.getElementById('syn1').value.trim();\n            const p2 = document.getElementById('syn2').value.trim();\n\n            if (!p1 || !p2) {\n                alert(\"Por favor completa ambos nombres\");\n                return;\n            }\n\n            synergyRules.push([p1, p2]);\n            updateSynergyList();\n            document.getElementById('syn1').value = '';\n            document.getElementById('syn2').value = '';\n        }\n\n        function updateSynergyList() {\n            let html = '';\n            synergyRules.forEach((rule, i) => {\n                html += `<div class=\"rule-item\">\n                    <span><span class=\"rule-tag synergy\">${rule[0]}</span> ↔ <span class=\"rule-tag synergy\">${rule[1]}</span></span>\n                    <button class=\"btn btn-danger\" style=\"padding: 8px 16px; font-size: 0.9rem;\" onclick=\"removeSynergy(${i})\">Eliminar</button>\n                </div>`;\n            });\n            document.getElementById('synergyList').innerHTML = html;\n        }\n\n        function removeSynergy(index) {\n            synergyRules.splice(index, 1);\n            updateSynergyList();\n        }\n\n        // Sorteo con Reglas\n        function rulesRaffle() {\n            const list = document.getElementById('rulesList').value.trim().split('\\n').filter(x => x.trim().length > 0);\n            const numTeams = parseInt(document.getElementById('numTeams').value);\n\n            if (list.length === 0) {\n                alert(\"Por favor ingresa una lista de participantes\");\n                return;\n            }\n            if (numTeams > list.length) {\n                alert(\"No puedes tener más equipos que participantes\");\n                return;\n            }\n\n            let validTeams = null;\n            let attempts = 0;\n            const maxAttempts = 1000;\n\n            while (attempts < maxAttempts) {\n                const shuffled = [...list].sort(() => Math.random() - 0.5);\n                const teams = Array.from({ length: numTeams }, () => []);\n                shuffled.forEach((person, i) => {\n                    teams[i % numTeams].push(person);\n                });\n\n                if (checkRules(teams)) {\n                    validTeams = teams;\n                    break;\n                }\n                attempts++;\n            }\n\n            if (!validTeams) {\n                alert(\"No se pudo encontrar una combinación que cumpla todas las reglas después de 1000 intentos. Intenta con reglas menos restrictivas.\");\n                return;\n            }\n\n            let html = '<div class=\"results\"><h3>📋 Equipos con Reglas Aplicadas</h3>';\n            validTeams.forEach((team, i) => {\n                html += `<div class=\"result-item\"><h3>Equipo ${i + 1}</h3><ul>`;\n                team.forEach(person => {\n                    html += `<li>${person}</li>`;\n                });\n                html += '</ul></div>';\n            });\n            html += '</div>';\n\n            document.getElementById('rulesResults').innerHTML = html;\n            addToHistory(`Sorteo con Reglas: ${list.length} participantes en ${numTeams} equipos (${incompatibilityRules.length} incompatibilidades, ${synergyRules.length} sinergias)`);\n        }\n\n        function checkRules(teams) {\n            // Verificar incompatibilidades\n            for (let rule of incompatibilityRules) {\n                for (let team of teams) {\n                    if (team.includes(rule[0]) && team.includes(rule[1])) return false;\n                }\n            }\n            // Verificar sinergias\n            for (let rule of synergyRules) {\n                let found = false;\n                for (let team of teams) {\n                    if (team.includes(rule[0]) && team.includes(rule[1])) {\n                        found = true;\n                        break;\n                    }\n                }\n                if (!found) return false;\n            }\n            return true;\n        }\n\n        function clearRules() {\n            document.getElementById('rulesList').value = '';\n            document.getElementById('rulesResults').innerHTML = '';\n            document.getElementById('rulesCounter').textContent = '0 participantes';\n            incompatibilityRules = [];\n            synergyRules = [];\n            updateIncompatibilityList();\n            updateSynergyList();\n        }\n\n        // Dados\n        function rollDice() {\n            const numDice = parseInt(document.getElementById('numDice').value);\n            const container = document.getElementById('diceContainer');\n            container.innerHTML = '';\n            let results = [];\n\n            for (let i = 0; i < numDice; i++) {\n                const dice = document.createElement('div');\n                dice.className = 'dice rolling';\n                dice.textContent = '🎲';\n                container.appendChild(dice);\n\n                setTimeout(() => {\n                    const result = Math.floor(Math.random() * 6) + 1;\n                    results.push(result);\n                    dice.textContent = result;\n                    dice.classList.remove('rolling');\n\n                    if (results.length === numDice) {\n                        const total = results.reduce((a, b) => a + b, 0);\n                        document.getElementById('diceResult').innerHTML = `<div class=\"results\"><h3>Resultados: ${results.join(', ')}</h3><h2>Total: ${total}</h2></div>`;\n                        addToHistory(`Dados: ${numDice} dados - Total: ${total}`);\n                    }\n                }, 1000);\n            }\n        }\n\n        // Moneda\n        function flipCoin() {\n            const coin = document.getElementById('coinDisplay');\n            coin.className = 'coin flipping';\n            \n            setTimeout(() => {\n                const result = Math.random() < 0.5 ? 'Cara' : 'Cruz';\n                coin.textContent = result === 'Cara' ? '🌞' : '🌙';\n                coin.classList.remove('flipping');\n                document.getElementById('coinResult').innerHTML = `<div class=\"results\"><h2>Resultado: ${result}</h2></div>`;\n                addToHistory(`Moneda: ${result}`);\n            }, 1000);\n        }\n\n        // Historial\n        function addToHistory(text) {\n            const now = new Date();\n            const time = now.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });\n            history.unshift({ text, time });\n            if (history.length > 10) history.pop();\n            updateHistory();\n        }\n\n        function updateHistory() {\n            let html = '';\n            if (history.length === 0) {\n                html = '<p style=\"text-align: center; color: #999;\">No hay sorteos recientes</p>';\n            } else {\n                history.forEach(item => {\n                    html += `<div class=\"history-item\"><strong>${item.time}</strong> - ${item.text}</div>`;\n                });\n            }\n            document.getElementById('history').innerHTML = html;\n        }\n\n        // Ruleta\n        let rouletteSpinning = false;\n        function spinRoulette() {\n            const list = document.getElementById('rouletteList').value.trim().split('\\n').filter(x => x.trim().length > 0);\n            if (list.length < 2) {\n                alert(\"Por favor ingresa al menos 2 opciones\");\n                return;\n            }\n            if (rouletteSpinning) return;\n\n            rouletteSpinning = true;\n            const canvas = document.getElementById('rouletteCanvas');\n            const ctx = canvas.getContext('2d');\n            const colors = ['#4ECDC4', '#FFA07A', '#FF6B6B', '#FFD93D', '#6BCF7F', '#A78BFA', '#F472B6', '#FB923C'];\n            \n            let currentAngle = 0;\n            let spinSpeed = 30 + Math.random() * 20;\n            const friction = 0.985;\n            const minSpeed = 0.2;\n\n            function drawRoulette(angle) {\n                const centerX = canvas.width / 2;\n                const centerY = canvas.height / 2;\n                const radius = Math.min(centerX, centerY) - 10;\n                const sliceAngle = (2 * Math.PI) / list.length;\n\n                ctx.clearRect(0, 0, canvas.width, canvas.height);\n\n                for (let i = 0; i < list.length; i++) {\n                    const startAngle = angle + i * sliceAngle;\n                    const endAngle = startAngle + sliceAngle;\n\n                    ctx.beginPath();\n                    ctx.moveTo(centerX, centerY);\n                    ctx.arc(centerX, centerY, radius, startAngle, endAngle);\n                    ctx.closePath();\n\n                    ctx.fillStyle = colors[i % colors.length];\n                    ctx.fill();\n                    ctx.strokeStyle = 'white';\n                    ctx.lineWidth = 3;\n                    ctx.stroke();\n\n                    // Texto\n                    ctx.save();\n                    ctx.translate(centerX, centerY);\n                    ctx.rotate(startAngle + sliceAngle / 2);\n                    ctx.textAlign = \"right\";\n                    ctx.fillStyle = \"white\";\n                    ctx.font = \"bold 16px Arial\";\n                    ctx.fillText(list[i], radius - 20, 5);\n                    ctx.restore();\n                }\n\n                // Flecha indicadora\n                ctx.beginPath();\n                ctx.moveTo(centerX, 20);\n                ctx.lineTo(centerX - 15, 50);\n                ctx.lineTo(centerX + 15, 50);\n                ctx.closePath();\n                ctx.fillStyle = '#FF6B6B';\n                ctx.fill();\n            }\n\n            function animate() {\n                currentAngle += (spinSpeed * Math.PI) / 180;\n                drawRoulette(currentAngle);\n                spinSpeed *= friction;\n\n                if (spinSpeed > minSpeed) {\n                    requestAnimationFrame(animate);\n                } else {\n                    rouletteSpinning = false;\n                    const sliceAngle = (2 * Math.PI) / list.length;\n                    // Calcular ganador basado en la posición de la flecha (flecha está en -PI/2)\n                    const normalizedAngle = (1.5 * Math.PI - currentAngle) % (2 * Math.PI);\n                    const winnerIndex = Math.floor((normalizedAngle < 0 ? normalizedAngle + 2 * Math.PI : normalizedAngle) / sliceAngle);\n                    const winner = list[winnerIndex];\n\n                    document.getElementById('rouletteResult').innerHTML = `<div class=\"results\"><h2>🎯 Resultado: ${winner}</h2></div>`;\n                    addToHistory(`Ruleta: ${winner}`);\n                }\n            }\n\n            animate();\n        }\n\n        function clearRoulette() {\n            document.getElementById('rouletteList').value = '';\n            document.getElementById('rouletteResult').innerHTML = '';\n            document.getElementById('rouletteCounter').textContent = '0 opciones';\n            const canvas = document.getElementById('rouletteCanvas');\n            const ctx = canvas.getContext('2d');\n            ctx.clearRect(0, 0, canvas.width, canvas.height);\n        }\n\n        // Cruces\n        function drawCrosses() {\n            const pot1 = document.getElementById('pot1List').value.trim().split('\\n').filter(x => x.trim().length > 0);\n            const pot2 = document.getElementById('pot2List').value.trim().split('\\n').filter(x => x.trim().length > 0);\n\n            if (pot1.length === 0 || pot2.length === 0) {\n                alert(\"Por favor completa ambos bombos\");\n                return;\n            }\n            if (pot1.length !== pot2.length) {\n                alert(\"Ambos bombos deben tener la misma cantidad de equipos\");\n                return;\n            }\n\n            const shuffled1 = [...pot1].sort(() => Math.random() - 0.5);\n            const shuffled2 = [...pot2].sort(() => Math.random() - 0.5);\n            \n            const format = document.getElementById('crossesFormat').value;\n            let html = '<div class=\"results\"><h3>⚔️ Cruces Definidos</h3>';\n            html += '<button class=\"btn btn-secondary\" style=\"margin-bottom: 15px;\" onclick=\"copyToExcel(\\'crossesTable\\')\">Copiar para Excel</button>';\n            html += '<table id=\"crossesTable\" style=\"width:100%; border-collapse: collapse; margin-top: 10px;\">';\n            html += '<tr style=\"background: #4ECDC4; color: white;\"><th style=\"padding:10px; border:1px solid #ddd;\">Cruce</th><th style=\"padding:10px; border:1px solid #ddd;\">Equipo Local</th><th style=\"padding:10px; border:1px solid #ddd;\">Equipo Visitante</th></tr>';\n\n            const matches = [];\n            for (let i = 0; i < shuffled1.length; i++) {\n                html += `<tr><td style=\"padding:10px; border:1px solid #ddd; text-align:center;\">Cruce ${i + 1}</td><td style=\"padding:10px; border:1px solid #ddd;\">${shuffled1[i]}</td><td style=\"padding:10px; border:1px solid #ddd;\">${shuffled2[i]}</td></tr>`;\n                matches.push({ home: shuffled1[i], away: shuffled2[i] });\n            }\n            html += '</table></div>';\n            document.getElementById('crossesResults').innerHTML = html;\n\n            // Generar fixture\n            let fixtureHtml = '<div class=\"results\" style=\"margin-top:20px;\"><h3>📅 Fixture de Cruces</h3>';\n            fixtureHtml += '<button class=\"btn btn-secondary\" style=\"margin-bottom: 15px;\" onclick=\"copyToExcel(\\'crossesFixtureTable\\')\">Copiar para Excel</button>';\n            fixtureHtml += '<table id=\"crossesFixtureTable\" style=\"width:100%; border-collapse: collapse; margin-top: 10px;\">';\n            \n            if (format === 'roundtrip') {\n                fixtureHtml += '<tr style=\"background: #4ECDC4; color: white;\"><th style=\"padding:10px; border:1px solid #ddd;\">Cruce</th><th style=\"padding:10px; border:1px solid #ddd;\">Fase</th><th style=\"padding:10px; border:1px solid #ddd;\">Local</th><th style=\"padding:10px; border:1px solid #ddd;\">Visitante</th></tr>';\n                matches.forEach((match, i) => {\n                    fixtureHtml += `<tr><td style=\"padding:10px; border:1px solid #ddd; text-align:center;\">Cruce ${i + 1}</td><td style=\"padding:10px; border:1px solid #ddd;\">Ida</td><td style=\"padding:10px; border:1px solid #ddd;\"><strong>${match.home}</strong></td><td style=\"padding:10px; border:1px solid #ddd;\">${match.away}</td></tr>`;\n                    fixtureHtml += `<tr><td style=\"padding:10px; border:1px solid #ddd; text-align:center;\">Cruce ${i + 1}</td><td style=\"padding:10px; border:1px solid #ddd;\">Vuelta</td><td style=\"padding:10px; border:1px solid #ddd;\"><strong>${match.away}</strong></td><td style=\"padding:10px; border:1px solid #ddd;\">${match.home}</td></tr>`;\n                });\n            } else {\n                fixtureHtml += '<tr style=\"background: #4ECDC4; color: white;\"><th style=\"padding:10px; border:1px solid #ddd;\">Partido</th><th style=\"padding:10px; border:1px solid #ddd;\">Local</th><th style=\"padding:10px; border:1px solid #ddd;\">Visitante</th></tr>';\n                matches.forEach((match, i) => {\n                    fixtureHtml += `<tr><td style=\"padding:10px; border:1px solid #ddd; text-align:center;\">Partido ${i + 1}</td><td style=\"padding:10px; border:1px solid #ddd;\"><strong>${match.home}</strong></td><td style=\"padding:10px; border:1px solid #ddd;\">${match.away}</td></tr>`;\n                });\n            }\n            fixtureHtml += '</table></div>';\n            document.getElementById('crossesFixture').innerHTML = fixtureHtml;\n\n            addToHistory(`Cruces: ${pot1.length} enfrentamientos sorteados`);\n        }\n\n        function clearCrosses() {\n            document.getElementById('pot1List').value = '';\n            document.getElementById('pot2List').value = '';\n            document.getElementById('crossesResults').innerHTML = '';\n            document.getElementById('crossesFixture').innerHTML = '';\n            document.getElementById('pot1Counter').textContent = '0 equipos';\n            document.getElementById('pot2Counter').textContent = '0 equipos';\n        }\n\n        // Grupos con Bombos\n        function updatePotsInputs() {\n            const numPots = parseInt(document.getElementById('numPots').value);\n            const container = document.getElementById('potsInputsContainer');\n            let html = '';\n            for (let i = 1; i <= numPots; i++) {\n                html += `<div class=\"input-group\"><label>Bombo ${i} ${i === 1 ? '(Cabezas de Serie)' : ''}</label><textarea id=\"potInput${i}\" placeholder=\"Equipo ${i}.1\nEquipo ${i}.2\nEquipo ${i}.3\"></textarea><span class=\"counter\" id=\"potCounter${i}\">0 equipos</span></div>`;\n            }\n            container.innerHTML = html;\n\n            // Agregar eventos\n            for (let i = 1; i <= numPots; i++) {\n                document.getElementById(`potInput${i}`).addEventListener('input', function() {\n                    const count = this.value.trim().split('\\n').filter(x => x.trim().length > 0).length;\n                    document.getElementById(`potCounter${i}`).textContent = `${count} equipos`;\n                });\n            }\n        }\n\n        function drawGroupsWithPots() {\n            const numPots = parseInt(document.getElementById('numPots').value);\n            const numGroups = parseInt(document.getElementById('numGroupsPots').value);\n            const pots = [];\n\n            for (let i = 1; i <= numPots; i++) {\n                const pot = document.getElementById(`potInput${i}`).value.trim().split('\\n').filter(x => x.trim().length > 0);\n                if (pot.length === 0) {\n                    alert(`Por favor completa el Bombo ${i}`);\n                    return;\n                }\n                if (pot.length !== numGroups) {\n                    alert(`Cada bombo debe tener ${numGroups} equipos (uno por grupo)`);\n                    return;\n                }\n                pots.push(pot);\n            }\n\n            const groups = Array.from({ length: numGroups }, () => []);\n\n            for (let potIndex = 0; potIndex < pots.length; potIndex++) {\n                const shuffledPot = [...pots[potIndex]].sort(() => Math.random() - 0.5);\n                shuffledPot.forEach((team, groupIndex) => {\n                    groups[groupIndex].push(team);\n                });\n            }\n\n            const format = document.getElementById('potsFormat').value;\n            let html = '<div class=\"results\"><h3>📋 Grupos Formados</h3>';\n            html += '<button class=\"btn btn-secondary\" style=\"margin-bottom: 15px;\" onclick=\"copyToExcel(\\'potsTable\\')\">Copiar para Excel</button>';\n            html += '<table id=\"potsTable\" style=\"width:100%; border-collapse: collapse; margin-top: 10px;\">';\n            html += '<tr style=\"background: #4ECDC4; color: white;\"><th style=\"padding:10px; border:1px solid #ddd;\">Grupo</th><th style=\"padding:10px; border:1px solid #ddd;\">Equipos</th></tr>';\n\n            groups.forEach((group, i) => {\n                html += `<tr><td style=\"padding:10px; border:1px solid #ddd; text-align:center; font-weight:bold;\">Grupo ${String.fromCharCode(65 + i)}</td><td style=\"padding:10px; border:1px solid #ddd;\">`;\n                group.forEach((team, idx) => {\n                    html += `${team}${idx < group.length - 1 ? '<br>' : ''}`;\n                });\n                html += '</td></tr>';\n            });\n            html += '</table></div>';\n            document.getElementById('potsResults').innerHTML = html;\n\n            // Generar fixture de grupos\n            let fixtureHtml = '<div class=\"results\" style=\"margin-top:20px;\"><h3>📅 Fixture por Grupos</h3>';\n            fixtureHtml += '<button class=\"btn btn-secondary\" style=\"margin-bottom: 15px;\" onclick=\"copyToExcel(\\'potsFixtureTable\\')\">Copiar para Excel</button>';\n            groups.forEach((group, i) => {\n                fixtureHtml += `<h4 style=\"margin-top:20px;\">Grupo ${String.fromCharCode(65 + i)}</h4>`;\n                fixtureHtml += `<table id=\"potsFixtureTable${i}\" style=\"width:100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 20px;\">`;\n                fixtureHtml += '<tr style=\"background: #4ECDC4; color: white;\"><th style=\"padding:10px; border:1px solid #ddd;\">Fecha</th><th style=\"padding:10px; border:1px solid #ddd;\">Local</th><th style=\"padding:10px; border:1px solid #ddd;\">Visitante</th></tr>';\n\n                const matches = format === 'roundrobin' ? generateRoundRobin(group) : generateSingleRound(group);\n                matches.forEach((match, idx) => {\n                    fixtureHtml += `<tr><td style=\"padding:10px; border:1px solid #ddd; text-align:center;\">Fecha ${idx + 1}</td><td style=\"padding:10px; border:1px solid #ddd;\"><strong>${match.home}</strong></td><td style=\"padding:10px; border:1px solid #ddd;\">${match.away}</td></tr>`;\n                });\n                fixtureHtml += '</table>';\n            });\n            document.getElementById('potsFixture').innerHTML = fixtureHtml;\n\n            addToHistory(`Grupos con Bombos: ${numGroups} grupos con ${numPots} bombos`);\n        }\n\n        function clearPots() {\n            const numPots = parseInt(document.getElementById('numPots').value);\n            for (let i = 1; i <= numPots; i++) {\n                if (document.getElementById(`potInput${i}`)) document.getElementById(`potInput${i}`).value = '';\n            }\n            document.getElementById('potsResults').innerHTML = '';\n            document.getElementById('potsFixture').innerHTML = '';\n        }\n\n        // Torneo\n        function generateTournament() {\n            const teams = document.getElementById('tournamentList').value.trim().split('\\n').filter(x => x.trim().length > 0);\n            const teamsPerGroup = parseInt(document.getElementById('teamsPerGroup').value);\n            const teamsAdvance = parseInt(document.getElementById('teamsAdvance').value);\n\n            if (teams.length < 4) {\n                alert(\"Necesitas al menos 4 equipos para un torneo\");\n                return;\n            }\n            if (teamsAdvance >= teamsPerGroup) {\n                alert(\"Los equipos que clasifican deben ser menos que los equipos por grupo\");\n                return;\n            }\n\n            const numGroups = Math.ceil(teams.length / teamsPerGroup);\n            const shuffled = [...teams].sort(() => Math.random() - 0.5);\n            const groups = Array.from({ length: numGroups }, () => []);\n\n            shuffled.forEach((team, i) => {\n                groups[i % numGroups].push(team);\n            });\n\n            const format = document.getElementById('tournamentFormat').value;\n            let html = '<div class=\"results\"><h3>📋 Fase de Grupos</h3>';\n            html += '<button class=\"btn btn-secondary\" style=\"margin-bottom: 15px;\" onclick=\"copyToExcel(\\'tournamentTable\\')\">Copiar para Excel</button>';\n            html += '<table id=\"tournamentTable\" style=\"width:100%; border-collapse: collapse; margin-top: 10px;\">';\n            html += '<tr style=\"background: #4ECDC4; color: white;\"><th style=\"padding:10px; border:1px solid #ddd;\">Grupo</th><th style=\"padding:10px; border:1px solid #ddd;\">Equipos</th></tr>';\n\n            groups.forEach((group, i) => {\n                html += `<tr><td style=\"padding:10px; border:1px solid #ddd; text-align:center; font-weight:bold;\">Grupo ${String.fromCharCode(65 + i)}</td><td style=\"padding:10px; border:1px solid #ddd;\">`;\n                group.forEach(team => {\n                    html += team + '<br>';\n                });\n                html += '</td></tr>';\n            });\n            html += '</table></div>';\n\n            const totalAdvancing = numGroups * teamsAdvance;\n            const knockoutRounds = Math.log2(totalAdvancing);\n\n            if (Number.isInteger(knockoutRounds)) {\n                html += `<div class=\"results\" style=\"margin-top:20px;\"><h3>🏆 Fase de Eliminación Directa</h3><p>Los primeros ${teamsAdvance} de cada grupo (${totalAdvancing} equipos) avanzan a ${getRoundName(totalAdvancing)}</p></div>`;\n            }\n\n            document.getElementById('tournamentResults').innerHTML = html;\n\n            // Generar fixture completo\n            let fixtureHtml = '<div class=\"results\" style=\"margin-top:20px;\"><h3>📅 Fixture Completo del Torneo</h3>';\n            fixtureHtml += '<button class=\"btn btn-secondary\" style=\"margin-bottom: 15px;\" onclick=\"copyToExcel(\\'tournamentFixtureTable\\')\">Copiar para Excel</button>';\n            fixtureHtml += '<h4>Fase de Grupos</h4>';\n\n            groups.forEach((group, i) => {\n                fixtureHtml += `<h4 style=\"margin-top:20px;\">Grupo ${String.fromCharCode(65 + i)}</h4>`;\n                fixtureHtml += `<table id=\"tournamentFixtureTable${i}\" style=\"width:100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 20px;\">`;\n                fixtureHtml += '<tr style=\"background: #4ECDC4; color: white;\"><th style=\"padding:10px; border:1px solid #ddd;\">Jornada</th><th style=\"padding:10px; border:1px solid #ddd;\">Local</th><th style=\"padding:10px; border:1px solid #ddd;\">Visitante</th></tr>';\n\n                const matches = format === 'roundrobin' ? generateRoundRobin(group) : generateSingleRound(group);\n                matches.forEach((match, idx) => {\n                    fixtureHtml += `<tr><td style=\"padding:10px; border:1px solid #ddd; text-align:center;\">Jornada ${idx + 1}</td><td style=\"padding:10px; border:1px solid #ddd;\"><strong>${match.home}</strong></td><td style=\"padding:10px; border:1px solid #ddd;\">${match.away}</td></tr>`;\n                });\n                fixtureHtml += '</table>';\n            });\n\n            if (Number.isInteger(knockoutRounds)) {\n                fixtureHtml += '<div class=\"result-item\"><h4>Fase Eliminatoria</h4>';\n                fixtureHtml += `<p>📊 ${getRoundName(totalAdvancing)}: ${totalAdvancing / 2} partidos</p>`;\n                let remaining = totalAdvancing / 2;\n                while (remaining >= 2) {\n                    remaining = remaining / 2;\n                    fixtureHtml += `<p>📊 ${getRoundName(remaining * 2)}: ${remaining} partidos</p>`;\n                }\n                fixtureHtml += '</div>';\n            }\n\n            fixtureHtml += '</div>';\n            document.getElementById('tournamentFixture').innerHTML = fixtureHtml;\n\n            addToHistory(`Torneo: ${teams.length} equipos en ${numGroups} grupos`);\n        }\n\n        function generateRoundRobin(teams) {\n            const matches = [];\n            for (let i = 0; i < teams.length; i++) {\n                for (let j = i + 1; j < teams.length; j++) {\n                    matches.push({ home: teams[i], away: teams[j] });\n                }\n            }\n            return matches;\n        }\n\n        function generateSingleRound(teams) {\n            const matches = [];\n            const shuffled = [...teams].sort(() => Math.random() - 0.5);\n            for (let i = 0; i < shuffled.length; i += 2) {\n                if (i + 1 < shuffled.length) {\n                    matches.push({ home: shuffled[i], away: shuffled[i + 1] });\n                }\n            }\n            return matches;\n        }\n\n        function copyToExcel(tableId) {\n            const table = document.getElementById(tableId);\n            if (!table) {\n                alert(\"No hay tabla para copiar\");\n                return;\n            }\n            let text = '';\n            const rows = table.getElementsByTagName('tr');\n            for (let row of rows) {\n                const cells = row.getElementsByTagName('td').length > 0 ? row.getElementsByTagName('td') : row.getElementsByTagName('th');\n                let rowText = [];\n                for (let cell of cells) {\n                    let cellText = cell.innerText.replace(/\\n/g, ' ').replace(/\\t/g, ' ');\n                    rowText.push(cellText);\n                }\n                text += rowText.join('\\t') + '\\n';\n            }\n            \n            navigator.clipboard.writeText(text).then(() => {\n                alert(\"✅ Copiado! Ahora puedes pegarlo en Excel con Ctrl+V\");\n            }).catch(err => {\n                alert(\"❌ No se pudo copiar. Intenta seleccionar y copiar manualmente.\");\n            });\n        }\n\n        function generateRandomNumber() {\n            const min = parseInt(document.getElementById('minNumber').value);\n            const max = parseInt(document.getElementById('maxNumber').value);\n            \n            if (isNaN(min) || isNaN(max)) {\n                alert(\"Por favor ingresa números válidos\");\n                return;\n            }\n            if (min >= max) {\n                alert(\"El número mínimo debe ser menor que el máximo\");\n                return;\n            }\n\n            const display = document.getElementById('randomNumberDisplay');\n            let counter = 0;\n            const interval = setInterval(() => {\n                const tempNum = Math.floor(Math.random() * (max - min + 1)) + min;\n                display.textContent = tempNum;\n                counter++;\n                if (counter > 20) {\n                    clearInterval(interval);\n                    const finalNum = Math.floor(Math.random() * (max - min + 1)) + min;\n                    display.textContent = finalNum;\n                    document.getElementById('randomNumberResult').innerHTML = `<div class=\"results\"><h2>🎯 Número generado: ${finalNum}</h2><p>Rango: ${min} - ${max}</p></div>`;\n                    addToHistory(`Número Aleatorio: ${finalNum} (rango ${min}-${max})`);\n                }\n            }, 50);\n        }\n\n        function clearRandomNumber() {\n            document.getElementById('minNumber').value = 1;\n            document.getElementById('maxNumber').value = 100;\n            document.getElementById('randomNumberDisplay').textContent = '?';\n            document.getElementById('randomNumberResult').innerHTML = '';\n        }\n\n        function getRoundName(numTeams) {\n            switch(numTeams) {\n                case 2: return \"Final\";\n                case 4: return \"Semifinales\";\n                case 8: return \"Cuartos de Final\";\n                case 16: return \"Octavos de Final\";\n                case 32: return \"Dieciseisavos de Final\";\n                default: return `Ronda de ${numTeams}`;\n            }\n        }\n\n        function clearTournament() {\n            document.getElementById('tournamentList').value = '';\n            document.getElementById('tournamentResults').innerHTML = '';\n            document.getElementById('tournamentFixture').innerHTML = '';\n            document.getElementById('tournamentCounter').textContent = '0 equipos';\n        }\n\n        // Inicializar\n        updateHistory();\n        updatePotsInputs();\n    </script>\n</body>\n</html>
+              
